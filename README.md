@@ -15,8 +15,9 @@ We need robust UDP transfer for big files. So, we embed some extra services arou
 
 Pull docker on source and destination machines. 
 
-Destination machine : launch docker ebusrt image in listener mode, so it's always listening for receiving files. 
-Source machine : launch docker ebusrt image in caller mode, so it's always listening for sending files. 
+Destination machine : launch docker ebusrt image in listener mode, so it's always listening for receiving files.
+
+Source machine : launch docker ebusrt image in caller mode, so it's always listening for sending files.
 
 This is a very simple, robust and isolated process.
 
@@ -47,5 +48,5 @@ not implemented yet
 not implemented yet
 
 ## References
-[srt]https://github.com/Haivision/srt
-[alpine-packages]http://pkgs.alpinelinux.org/
+[srt]:https://github.com/Haivision/srt
+[alpine-packages]:http://pkgs.alpinelinux.org/
