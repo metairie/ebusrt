@@ -48,5 +48,6 @@ not implemented yet
 not implemented yet
 
 ## References
-[srt](https://github.com/Haivision/srt)
-[alpine-packages](http://pkgs.alpinelinux.org/)
+Secure Reliable Transport: [srt](https://github.com/Haivision/srt)
+
+Docker Alpine: [alpine-packages](http://pkgs.alpinelinux.org/)
