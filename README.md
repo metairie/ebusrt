@@ -2,7 +2,7 @@
 
 An SRT Docker image based on [Alpine Linux][alpine].
 
-WARNING : BETA VERSION , NOT GUARANTEED
+**WARNING** : BETA VERSION , NOT GUARANTEED.
 We only manage UDP files transfer, it's NOT for streaming live!
 The code source is based on SRT dev branch, not master release yet. Bugs would be possible at any moment.
 
@@ -14,8 +14,8 @@ We need robust UDP transfer for file. So, we embed some extra services around SR
 
 Pull docker on source and destination machines. 
 
-Destination machine : launch docker ebusrt image in listener mode, so it's always listening for sending files. 
-Source machine : launch docker ebusrt image in caller mode, so it's always listening for receiving files. 
+Destination machine : launch docker ebusrt image in listener mode, so it's always listening for receiving files. 
+Source machine : launch docker ebusrt image in caller mode, so it's always listening for sending files. 
 
 This is a very simple, robust and isolated process.
 
@@ -45,5 +45,6 @@ not implemented yet
 
 not implemented yet
 
-[srt]: https://github.com/Haivision/srt
-[alpine-packages]: http://pkgs.alpinelinux.org/
+## References
+[srt]https://github.com/Haivision/srt
+[alpine-packages]http://pkgs.alpinelinux.org/
