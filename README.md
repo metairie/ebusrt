@@ -3,12 +3,13 @@
 An SRT Docker image based on [Alpine Linux][alpine].
 
 **WARNING** : BETA VERSION , NOT GUARANTEED.
+
 We only manage UDP files transfer, it's NOT for streaming live!
 The code source is based on SRT dev branch, not master release yet. Bugs would be possible at any moment.
 
 ## Why?
 
-We need robust UDP transfer for file. So, we embed some extra services around SRT (Secure Reliable Transport).
+We need robust UDP transfer for big files. So, we embed some extra services around SRT (Secure Reliable Transport).
 
 ## How to do?
 
