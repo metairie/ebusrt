@@ -11,6 +11,8 @@ do
  esac
 done
 
+SRT_POOL=10
+
 if [[ -z $HOME_SRT ]] 
 then
 	HOME_SRT=/tmp
@@ -28,36 +30,71 @@ echo "HOME_SRT: "$HOME_SRT
 echo "HOST_SRT targeted: "$HOST_SRT
 echo "PORT_SRT: "$PORT_SRT
 
-for entry in `ls $HOME_SRT/SEND/$search_dir`; do
-
-	echo "--------------------------------"
-	echo "Send file "$entry
-	result=0
-
-	echo "srt-file-transmit -v -loglevel=debug file://$HOME_SRT/SEND/$entry srt://$HOST_SRT:$PORT_SRT/"	
-	if [ -f $HOME_SRT/SEND/$entry ]
-	then
-		srt-file-transmit -v -loglevel=debug file://$HOME_SRT/SEND/$entry srt://$HOST_SRT:$PORT_SRT/
-		if [ $? -eq 0 ]
-		then
-			result=1
-		else
-			result=0
-		fi
-	fi
-	
-	if [ $result -eq 1 ]
-	then
-		echo "Success"
-		sudo mv $HOME_SRT/SEND/$entry $HOME_SRT/DONE/$entry
-		echo "File $entry sent and put in DONE folder"
-	else
-		echo " ++++ FAILED ++++ "
-		sudo mv $HOME_SRT/SEND/$entry $HOME_SRT/QUEUE/$sentry
-		echo "File $entry requeued in QUEUE folder"
-	fi
-	
+cd $HOME_SRT
+loop=`ls $HOME_SRT/QUEUE | wc -l`
+echo " Files to send in queue: "$loop
+while [ ! $loop -eq 0 ]
+do
 	echo
-	sleep 1
+	echo "Read pool of "$SRT_POOL" files MAX"
+	# take pool number of files max for sending
+	counter=0
+	for entry in `ls $HOME_SRT/QUEUE/$search_dir`; do
+		sudo mv $HOME_SRT/QUEUE/$entry $HOME_SRT/SEND/$entry
+		((counter++))
+		echo " file $counter $entry push to SEND"
+		if [ "$counter" -eq $SRT_POOL ]; then
+			break
+		fi
+	done
+	echo
+	filetosend=$HOST_SRT-`date +%Y%m%d_%H%M%S`-$RANDOM.tar
+	echo "Package $counter files to compressed tar file: "$filetosend
+	cd $HOME_SRT/SEND/
+	tar -zcvf $HOME_SRT/$filetosend *
+	cd $HOME_SRT
+	mv SEND/* DONE/
+	mv $filetosend SEND/
+	echo "Archive "$filetosend" created"
+
+	# launch sending
+	for entry in `ls $HOME_SRT/SEND/$search_dir`; do
+
+		echo "----------------------------------------------------------------"
+		echo "Send file "$entry
+		result=0
+
+		echo "srt-file-transmit -v -loglevel=debug file://$HOME_SRT/SEND/$entry srt://$HOST_SRT:$PORT_SRT/"	
+		if [ -f $HOME_SRT/SEND/$entry ]
+		then
+			srt-file-transmit -v -loglevel=debug file://$HOME_SRT/SEND/$entry srt://$HOST_SRT:$PORT_SRT/
+			if [ $? -eq 0 ]
+			then
+				result=0
+			else
+				result=1
+			fi
+		fi
+		
+		if [ $result -eq 0 ]
+		then
+			echo "Success"
+			sudo mv $HOME_SRT/SEND/$entry $HOME_SRT/DONE/$entry
+			echo "File $entry sent and put in DONE folder"
+		else
+			echo "XXXXX FAILED XXXXX"
+			sudo mv $HOME_SRT/SEND/$entry $HOME_SRT/QUEUE/$sentry
+			echo "File $entry requeued in QUEUE folder"
+		fi
+		
+		echo
+		sleep 1
+		
+	done
+
+	# loop again ?
+	echo 
+	loop=`ls $HOME_SRT/QUEUE | wc -l`
+	echo " Files resting in queue: "$loop
 
 done

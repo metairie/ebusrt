@@ -12,5 +12,4 @@ COPY scripts/listener.sh ebusrt/scripts/listener.sh
 RUN chmod +x ebusrt/scripts/*
 
 # start main command
-#CMD /opt/ebusrt/scripts/listener.sh && : >> /opt/ebusrt/log/srt.log && tail -f /opt/ebusrt/log/srt.log
 CMD echo "starting srt ..." && (/opt/ebusrt/scripts/listener.sh) && : >> /opt/ebusrt/log/srt.log && tail -f /opt/ebusrt/log/srt.log

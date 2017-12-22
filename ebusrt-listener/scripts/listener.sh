@@ -46,14 +46,10 @@ do
 	echo " - Start: srt-file-transmit -v -loglevel=debug srt://:$PORT_SRT/ file://$HOME_SRT/RECEIVE"
 	echo "   waiting file ... "
 	srt-file-transmit -v -loglevel=debug srt://:$PORT_SRT/ file://$HOME_SRT/RECEIVE
-	status=$?
-	if [ $status -eq 0 ]
+	if [ $? -eq 0 ]
 	then
 		echo " Success "
 	else
-		echo "XXXXXXXXXXXXXXXXXX"
 		echo "XXXXX FAILED XXXXX"
-		echo " reason: $status "
-		echo "XXXXXXXXXXXXXXXXXX"
 	fi
 done
