@@ -50,4 +50,4 @@ not implemented yet
 ## References
 Secure Reliable Transport: [srt](https://github.com/Haivision/srt)
 
-Docker Alpine: [alpine-packages](http://pkgs.alpinelinux.org/)
+Docker Alpine: [alpine-packages](https://hub.docker.com/r/alpine/git/)
