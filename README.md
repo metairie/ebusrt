@@ -47,6 +47,22 @@ not implemented yet
 
 not implemented yet
 
+## Want to build your all srt docker?
+
+git clone https://github.com/metairie/ebusrt.git
+
+go inside srt-base folder :
+
+docker build . -t srt-base
+
+go inside ebusrt-listener folder :
+
+docker build . -t ebusrt-listener
+
+go inside ebu-caller folder :
+
+docker build . -t ebusrt-caller
+
 ## References
 Secure Reliable Transport: [srt](https://github.com/Haivision/srt)
 
