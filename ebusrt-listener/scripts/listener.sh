@@ -49,10 +49,11 @@ do
 	status=$?
 	if [ $status -eq 0 ]
 	then
-		echo "-X-X-X-X-X- FAILED -X-X-X-X-X-"
-		echo " reason: $status"
+		echo " Success "
 	else
-	echo " Success "
+		echo "XXXXXXXXXXXXXXXXXX"
+		echo "XXXXX FAILED XXXXX"
+		echo " reason: $status "
+		echo "XXXXXXXXXXXXXXXXXX"
 	fi
-
 done

@@ -29,11 +29,11 @@ Send files from 1 source repository {repository}/QUEUE to 1 destination {reposit
 
 Source machine
 This command run srt in caller mode, share tmp folder, configured with json
-docker run -it -v /tmp:/tmp -v srt.json:srt.json -e "SRT_MODE=caller" ebusrt:latest
+docker run -it -v /tmp:/tmp -v srt.json:srt.json ebusrt-caller:latest
 
 Destination machine
-This command run srt in listener mode, share tmp folder, configured with json
-docker run -it -v /tmp:/tmp -v srt.json:srt.json -e "SRT_MODE=listener" ebusrt:latest
+This command run srt in listener mode port 8080/udp, share tmp folder, pass json configuration file
+docker run -it -p 8080:8080/udp -v /tmp:/tmp -v srt.json:srt.json ebusrt-listener:latest
 
 ## 1 caller to 1-n listener mode
 
