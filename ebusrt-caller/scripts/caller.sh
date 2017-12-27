@@ -74,10 +74,10 @@ echo " Files to send in queue: "$loop
 	echo "Read pool of "$POOL_SRT" files MAX"
 	# take pool number of files max for sending
 	counter=0
-	for entry in `ls $HOME_SRT/QUEUE/$search_dir`; do
+	for entry in `ls $HOME_SRT/QUEUE/`; do
 		sudo mv $HOME_SRT/QUEUE/$entry $HOME_SRT/SEND/$entry -f
 		((counter++))
-		echo " file $counter $entry push to SEND"
+		echo " file $counter $entry push to SEND folder"
 		if [ "$counter" -eq $POOL_SRT ]; then
 			break
 		fi
@@ -95,7 +95,7 @@ echo " Files to send in queue: "$loop
 	echo "Archive SEND/"$filetosend" created"
 
 	# launch sending
-	for entry in `ls $HOME_SRT/SEND/$search_dir`; do
+	for entry in `ls $HOME_SRT/SEND/`; do
 
 		echo "----------------------------------------------------------------"
 		echo "Send file "$entry

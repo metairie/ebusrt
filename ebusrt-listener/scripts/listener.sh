@@ -30,6 +30,12 @@ if [ ! -d "$HOME_SRT/RECEIVE" ]; then
 else
   echo "  $HOME_SRT/RECEIVE exists yet"
 fi
+if [ ! -d "$HOME_SRT/LOT" ]; then
+  echo "  create $HOME_SRT/LOT"
+  mkdir $HOME_SRT/LOT
+else
+  echo "  $HOME_SRT/LOT exists yet"
+fi
 if [ ! -d "$HOME_SRT/DONE" ]; then
   echo "  create $HOME_SRT/DONE"
   mkdir $HOME_SRT/DONE
@@ -38,8 +44,11 @@ else
 fi
 
 chmod 777 $HOME_SRT/RECEIVE -Rf
+chmod 777 $HOME_SRT/LOT -Rf
 chmod 777 $HOME_SRT/DONE -Rf
-  
+
+IN=${1:-1.2.3.4-12345678-123456-123456.tar}
+
 while true
 do
 	echo "----------------------------------------------------------------"
@@ -49,7 +58,12 @@ do
 	if [ $? -eq 0 ]
 	then
 		echo " Success "
-		IN=${1:-0.0.0.0-20000101-000000-000000.tar}
+
+		for entry in `ls $HOME_SRT/RECEIVE/`; do
+			sudo mv $HOME_SRT/RECEIVE/$entry $HOME_SRT/LOT/$entry -f
+			echo " file $entry push to LOT folder"
+			IN=$entry
+		done
 
 		OIFS=$IFS
 		IFS='-'
