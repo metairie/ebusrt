@@ -58,17 +58,17 @@ do
 		echo " Success "
 		for entry in `ls $HOME_SRT/RECEIVE/`; do
 			mv $HOME_SRT/RECEIVE/$entry $HOME_SRT/LOT/ -f
-			echo " file $entry pushed to LOT folder"
-			if [ ${entry: -4} == ".txt" ]; then
+			echo " file $entry pushed from RECEIVE to LOT folder"
+			if [ ${entry: -4} == ".tar" ]; then
 				cd $HOME_SRT/LOT
 				tar -zxvf $entry
+				echo " uncompress $entry"
 				cd $HOME_SRT
 				rm $entry
-			else
-				mv $entry LOT/ -f
+				echo " remove tar file $entry"
 			fi
-			mv $HOME_SRT/LOT/$entry DONE/ -f
-			echo " file moved to DONE and uncompressed"
+			mv $HOME_SRT/LOT/$entry $HOME_SRT/DONE/ -f
+			echo " file moved from LOT to DONE"
 		done
 
 	else
