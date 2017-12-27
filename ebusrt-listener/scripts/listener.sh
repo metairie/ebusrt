@@ -47,8 +47,6 @@ chmod 777 $HOME_SRT/RECEIVE -Rf
 chmod 777 $HOME_SRT/LOT -Rf
 chmod 777 $HOME_SRT/DONE -Rf
 
-IN=${1:-1.2.3.4-12345678-123456-123456.tar}
-
 while true
 do
 	echo "----------------------------------------------------------------"
@@ -58,51 +56,21 @@ do
 	if [ $? -eq 0 ]
 	then
 		echo " Success "
-
 		for entry in `ls $HOME_SRT/RECEIVE/`; do
-			mv $HOME_SRT/RECEIVE/$entry $HOME_SRT/LOT/$entry -f
-			echo " file $entry push to LOT folder"
-			IN=$entry
+			mv $HOME_SRT/RECEIVE/$entry $HOME_SRT/LOT/ -f
+			echo " file $entry pushed to LOT folder"
+			if [ ${entry: -4} == ".txt" ]; then
+				cd $HOME_SRT/LOT
+				tar -zxvf $entry
+				cd $HOME_SRT
+				rm $entry
+			else
+				mv $entry LOT/ -f
+			fi
+			mv $HOME_SRT/LOT/$entry DONE/ -f
+			echo " file moved to DONE and uncompressed"
 		done
 
-		OIFS=$IFS
-		IFS='-'
-		m=$IN
-		count=0
-		IP="255.255.255.255"
-		DATEYMD="19991231"
-		TIMEHMS="235959"
-		RND="999999.tar"
-		for x in $m
-		do
-			# IP
-			if [ $count -eq 0 ]; then
-				IP=$x
-			fi
-
-			# date YYMMDD
-			if [ $count -eq 1 ]; then
-				DATEYMD=$x
-			fi
-			
-			# date time HHMMSS
-			if [ $count -eq 2 ]; then
-				TIMEHMS=$x
-			fi
-			
-			# random
-			if [ $count -eq 3 ]; then
-				RND=$x
-			fi
-
-		done
-		IFS=$OIFS
-		FILENAME="$IP-$DATEYMD-$TIMEHMS-$RND"
-		echo "$DATEYMD:$TIMEHMS [$IP] successfully received file name $FILENAME"
-		mv $HOME_SRT/RECEIVE/$FILENAME $HOME_SRT/DONE$FILENAME -f
-		tar -zxvf $HOME_SRT/DONE/$FILENAME
-		echo " file moved to DONE and uncompressed"
-	
 	else
 		echo "XXXXX FAILED XXXXX"
 	fi

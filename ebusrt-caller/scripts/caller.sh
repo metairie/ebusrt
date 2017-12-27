@@ -54,6 +54,12 @@ if [ ! -d "$HOME_SRT/BATCH" ]; then
 else
   echo "  $HOME_SRT/BATCH exists yet"
 fi
+if [ ! -d "$HOME_SRT/TREATED" ]; then
+  echo "  create $HOME_SRT/TREATED"
+  mkdir $HOME_SRT/TREATED
+else
+  echo "  $HOME_SRT/TREATED exists yet"
+fi
 if [ ! -d "$HOME_SRT/SEND" ]; then
   echo "  create $HOME_SRT/SEND"
   mkdir $HOME_SRT/SEND
@@ -63,6 +69,7 @@ fi
 
 chmod 777 $HOME_SRT/QUEUE -Rf
 chmod 777 $HOME_SRT/BATCH -Rf
+chmod 777 $HOME_SRT/TREATED -Rf
 chmod 777 $HOME_SRT/SEND -Rf
 
 cd $HOME_SRT
@@ -75,7 +82,7 @@ echo " Files to send in queue: "$loop
 	# take pool number of files max for sending
 	counter=0
 	for entry in `ls $HOME_SRT/QUEUE/`; do
-		sudo mv $HOME_SRT/QUEUE/$entry $HOME_SRT/SEND/$entry -f
+		mv $HOME_SRT/QUEUE/$entry $HOME_SRT/SEND/ -f
 		((counter++))
 		echo " file $counter $entry push to SEND folder"
 		if [ "$counter" -eq $POOL_SRT ]; then
@@ -84,14 +91,14 @@ echo " Files to send in queue: "$loop
 	done
 	echo
 	filetosend=$HOST_SRT-`date +%Y%m%d_%H%M%S`-$RANDOM.tar
-	echo "Package $counter files to compressed tar file: "$filetosend
+	echo "Package $counter files to a slighty compressed tar file: "$filetosend
 	cd $HOME_SRT/SEND/
 	tar -zcvf $HOME_SRT/$filetosend *
 	cd $HOME_SRT
 	# move all source files in the batch into this temp folder
-	sudo mv SEND/* BATCH/ -f
+	mv SEND/* BATCH/ -f
 	# tar file is pushed to SEND
-	sudo mv $filetosend SEND/ -f
+	mv $filetosend SEND/ -f
 	echo "Archive SEND/"$filetosend" created"
 
 	# launch sending
@@ -116,15 +123,15 @@ echo " Files to send in queue: "$loop
 		if [ $result -eq 0 ]
 		then
 			echo "Success"
-			sudo mv $HOME_SRT/SEND/$entry $HOME_SRT/DONE/$entry -f
-			echo "File $entry sent and put in DONE folder"
-			sudo rm $HOME_SRT/BATCH/* -f
-			echo "Files into BATCH removed"
+			mv $HOME_SRT/SEND/$entry $HOME_SRT/TREATED/ -f
+			echo "File $entry correctly sent and put in TREATED folder"
+			rm $HOME_SRT/BATCH/* -f
+			echo "Corresponding files in BATCH folder are removed"
 		else
 			echo "XXXXX FAILED XXXXX"
-			sudo rm $HOME_SRT/SEND/$entry -f
+			rm $HOME_SRT/SEND/$entry -f
 			echo "File $entry removed"
-			sudo mv $HOME_SRT/BATCH/* $HOME_SRT/QUEUE -f
+			mv $HOME_SRT/BATCH/* $HOME_SRT/QUEUE/ -f
 			echo "Files from BATCH requeued in QUEUE folder"
 		fi
 		
