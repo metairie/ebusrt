@@ -60,7 +60,7 @@ do
 		echo " Success "
 
 		for entry in `ls $HOME_SRT/RECEIVE/`; do
-			sudo mv $HOME_SRT/RECEIVE/$entry $HOME_SRT/LOT/$entry -f
+			mv $HOME_SRT/RECEIVE/$entry $HOME_SRT/LOT/$entry -f
 			echo " file $entry push to LOT folder"
 			IN=$entry
 		done
@@ -94,13 +94,12 @@ do
 			if [ $count -eq 3 ]; then
 				RND=$x
 			fi
-			
-			((count++))
+
 		done
 		IFS=$OIFS
 		FILENAME="$IP-$DATEYMD-$TIMEHMS-$RND"
 		echo "$DATEYMD:$TIMEHMS [$IP] successfully received file name $FILENAME"
-		sudo mv $HOME_SRT/RECEIVE/$FILENAME $HOME_SRT/DONE$FILENAME -f
+		mv $HOME_SRT/RECEIVE/$FILENAME $HOME_SRT/DONE$FILENAME -f
 		tar -zxvf $HOME_SRT/DONE/$FILENAME
 		echo " file moved to DONE and uncompressed"
 	
