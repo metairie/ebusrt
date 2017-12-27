@@ -63,12 +63,12 @@ do
 				cd $HOME_SRT/LOT
 				tar -zxvf $entry
 				echo " uncompress $entry"
-				cd $HOME_SRT
 				rm $entry
 				echo " remove tar file $entry"
+				cd $HOME_SRT
 			fi
-			mv $HOME_SRT/LOT/$entry $HOME_SRT/DONE/ -f
-			echo " file moved from LOT to DONE"
+			mv $HOME_SRT/LOT/* $HOME_SRT/DONE/ -f
+			echo " file(s) moved from LOT to DONE"
 		done
 
 	else
