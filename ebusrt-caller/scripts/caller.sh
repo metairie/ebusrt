@@ -1,6 +1,7 @@
 echo "Launch srt-file-transmit in CALLER mode"
 export LD_LIBRARY_PATH=/usr/local/lib
 
+# args
 while getopts h:t:p: option
 do
  case "${option}"
@@ -11,8 +12,14 @@ do
  esac
 done
 
-SRT_POOL=10
+# json
+if [ -f ./srt.json ]; then
+	HOME_SRT=$(jq '. |  .HOME_SRT' ./srt.json | tr -d '"')
+	HOST_SRT=$(jq '. |  .HOST_SRT' ./srt.json | tr -d '"')
+	PORT_SRT=$(jq '. |  .PORT_SRT' ./srt.json | tr -d '"')
+fi
 
+# default
 if [[ -z $HOME_SRT ]] 
 then
 	HOME_SRT=/tmp
@@ -25,25 +32,53 @@ if [[ -z $PORT_SRT ]]
 then
 	PORT_SRT=8080
 fi
+
+POOL_SRT=10
 echo " Variables used for SRT"
+echo "POOL_SRT: "$POOL_SRT
 echo "HOME_SRT: "$HOME_SRT
 echo "HOST_SRT targeted: "$HOST_SRT
 echo "PORT_SRT: "$PORT_SRT
 
+echo " - Verifying/Creating folders" 
+cd $HOME_SRT
+if [ ! -d "$HOME_SRT/QUEUE" ]; then
+  echo "  create $HOME_SRT/QUEUE"
+  mkdir $HOME_SRT/QUEUE
+else
+  echo "  $HOME_SRT/QUEUE exists yet"
+fi
+if [ ! -d "$HOME_SRT/BATCH" ]; then
+  echo "  create $HOME_SRT/BATCH"
+  mkdir $HOME_SRT/BATCH
+else
+  echo "  $HOME_SRT/BATCH exists yet"
+fi
+if [ ! -d "$HOME_SRT/SEND" ]; then
+  echo "  create $HOME_SRT/SEND"
+  mkdir $HOME_SRT/SEND
+else
+  echo "  $HOME_SRT/SEND exists yet"
+fi
+
+chmod 777 $HOME_SRT/QUEUE -Rf
+chmod 777 $HOME_SRT/BATCH -Rf
+chmod 777 $HOME_SRT/SEND -Rf
+
 cd $HOME_SRT
 loop=`ls $HOME_SRT/QUEUE | wc -l`
 echo " Files to send in queue: "$loop
-while [ ! $loop -eq 0 ]
-do
+#while [ ! $loop -eq 0 ]
+#do
 	echo
-	echo "Read pool of "$SRT_POOL" files MAX"
+	echo "Read pool of "$POOL_SRT" files MAX"
 	# take pool number of files max for sending
 	counter=0
 	for entry in `ls $HOME_SRT/QUEUE/$search_dir`; do
-		sudo mv $HOME_SRT/QUEUE/$entry $HOME_SRT/SEND/$entry
+		sudo mv $HOME_SRT/QUEUE/$entry $HOME_SRT/SEND/$entry -f
 		((counter++))
 		echo " file $counter $entry push to SEND"
-		if [ "$counter" -eq $SRT_POOL ]; then
+		if [ "$counter" -eq $POOL_SRT ]; then
 			break
 		fi
 	done
@@ -53,9 +88,11 @@ do
 	cd $HOME_SRT/SEND/
 	tar -zcvf $HOME_SRT/$filetosend *
 	cd $HOME_SRT
-	mv SEND/* DONE/
-	mv $filetosend SEND/
-	echo "Archive "$filetosend" created"
+	# move all source files in the batch into this temp folder
+	sudo mv SEND/* BATCH/ -f
+	# tar file is pushed to SEND
+	sudo mv $filetosend SEND/ -f
+	echo "Archive SEND/"$filetosend" created"
 
 	# launch sending
 	for entry in `ls $HOME_SRT/SEND/$search_dir`; do
@@ -79,12 +116,16 @@ do
 		if [ $result -eq 0 ]
 		then
 			echo "Success"
-			sudo mv $HOME_SRT/SEND/$entry $HOME_SRT/DONE/$entry
+			sudo mv $HOME_SRT/SEND/$entry $HOME_SRT/DONE/$entry -f
 			echo "File $entry sent and put in DONE folder"
+			sudo rm $HOME_SRT/BATCH/* -f
+			echo "Files into BATCH removed"
 		else
 			echo "XXXXX FAILED XXXXX"
-			sudo mv $HOME_SRT/SEND/$entry $HOME_SRT/QUEUE/$sentry
-			echo "File $entry requeued in QUEUE folder"
+			sudo rm $HOME_SRT/SEND/$entry -f
+			echo "File $entry removed"
+			sudo mv $HOME_SRT/BATCH/* $HOME_SRT/QUEUE -f
+			echo "Files from BATCH requeued in QUEUE folder"
 		fi
 		
 		echo
@@ -97,4 +138,4 @@ do
 	loop=`ls $HOME_SRT/QUEUE | wc -l`
 	echo " Files resting in queue: "$loop
 
-done
+#done

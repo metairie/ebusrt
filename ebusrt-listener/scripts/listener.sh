@@ -86,7 +86,7 @@ do
 		IFS=$OIFS
 		FILENAME="$IP-$DATEYMD-$TIMEHMS-$RND"
 		echo "$DATEYMD:$TIMEHMS [$IP] successfully received file name $FILENAME"
-		mv $HOME_SRT/RECEIVE/$FILENAME $HOME_SRT/DONE$FILENAME
+		sudo mv $HOME_SRT/RECEIVE/$FILENAME $HOME_SRT/DONE$FILENAME -f
 		tar -zxvf $HOME_SRT/DONE/$FILENAME
 		echo " file moved to DONE and uncompressed"
 	
