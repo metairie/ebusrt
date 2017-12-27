@@ -75,8 +75,8 @@ chmod 777 $HOME_SRT/SEND -Rf
 cd $HOME_SRT
 loop=`ls $HOME_SRT/QUEUE | wc -l`
 echo " Files to send in queue: "$loop
-#while [ ! $loop -eq 0 ]
-#do
+while [ ! $loop -eq 0 ]
+do
 	echo
 	echo "Read pool of "$POOL_SRT" files MAX"
 	# take pool number of files max for sending
@@ -145,4 +145,4 @@ echo " Files to send in queue: "$loop
 	loop=`ls $HOME_SRT/QUEUE | wc -l`
 	echo " Files resting in queue: "$loop
 
-#done
+done
