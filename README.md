@@ -25,6 +25,14 @@ This is a very simple, robust and isolated process.
 
 Send files from 1 source repository {repository}/QUEUE to 1 destination {repository}/RECEIVE
 
+## Pull docker images ?
+
+Get docker images
+
+docker pull metairie/ebusrt-caller
+
+docker pull metairie/ebusrt-listener
+
 ### Usage
 
 Source machine
