@@ -13,10 +13,11 @@ do
 done
 
 # json
-if [ -f ./srt.json ]; then
-	HOME_SRT=$(jq '. |  .HOME_SRT' ./srt.json | tr -d '"')
-	HOST_SRT=$(jq '. |  .HOST_SRT' ./srt.json | tr -d '"')
-	PORT_SRT=$(jq '. |  .PORT_SRT' ./srt.json | tr -d '"')
+if [ -f /tmp/srt.json ]; then
+	config="/tmp/srt.json"
+	HOME_SRT=$(jq '. |  .HOME_SRT' $config | tr -d '"')
+	HOST_SRT=$(jq '. |  .HOST_SRT' $config | tr -d '"')
+	PORT_SRT=$(jq '. |  .PORT_SRT' $config | tr -d '"')
 fi
 
 # default
