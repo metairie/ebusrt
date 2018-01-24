@@ -4,3 +4,7 @@ docker rm $(docker ps -a -q)
 # Delete all images
 docker rmi $(docker images -q)
 
+# Execute a sh in an already running container
+docker ps 
+docker exec -it <NAME> | <CONTAINER_ID> /bin/sh
+
