@@ -4,15 +4,14 @@ services:
   ebusrt-caller:
     build: ebusrt-caller/Dockerfile
     volumes:
-     - /tmp:/tmp
+     - .:/tmp
 
   ebusrt-listener:
     build: ebusrt-listener/Dockerfile
     ports:
      - "8080:8080/udp"
     volumes:
-     - /tmp:/tmp
-     - ./srt.json: ./srt.json
+     - .:/tmp
 
   pure-ftpd:
     image: "stilliard:pure-ftpd"
