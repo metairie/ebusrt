@@ -17,14 +17,17 @@ services:
      - /tmp:/tmp
 
   pure-ftpd:
-    image: "stilliard/pure-ftpd"
+    image: "stilliard/pure-ftpd:hardened"
     container_name: ftpd_server
     ports:
      - "21:21"
      - "30000-30009:30000-30009"
+    environment:
+     - "PUBLICHOST=localhost"
 
   redis:
     image: "redis:alpine"
+
   portainer:
     image: "portainer/portainer"
     ports:
