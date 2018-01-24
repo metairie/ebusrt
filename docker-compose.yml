@@ -14,9 +14,9 @@ services:
      - .:/tmp
 
   pure-ftpd:
-    image: "stilliard:pure-ftpd"
+    image: "stilliard/pure-ftpd"
   redis:
     image: "redis:alpine"
   portainer:
-    image: "portainer:portainer"
+    image: "portainer/portainer"
 
