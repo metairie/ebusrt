@@ -1,4 +1,4 @@
-FROM metairie/srt-base:latest
+FROM ebuit/srt-base:latest
 
 MAINTAINER Metairie Stephane EBU:0.1
 

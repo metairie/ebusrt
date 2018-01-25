@@ -2,12 +2,15 @@ version: '3'
 
 volumes:
   portainer_data:
+  redis_data:
+  ebusrt_data:
 
 services:
-  ebusrt-caller:
-    build: ebusrt-caller
-    volumes:
-     - /tmp:/tmp
+#  ebusrt-caller:
+#    build: ebusrt-caller
+#    volumes:
+#     - /tmp:/tmp
+#     - ebusrt_data:/data
 
   ebusrt-listener:
     build: ebusrt-listener
@@ -15,6 +18,7 @@ services:
      - "8080:8080/udp"
     volumes:
      - /tmp:/tmp
+     - ebusrt_data:/data
 
   pure-ftpd:
     image: "stilliard/pure-ftpd:hardened"
@@ -25,8 +29,18 @@ services:
     environment:
      - "PUBLICHOST=localhost"
 
+# FIX WARNING to be run on HOST
+# sysctl vm.overcommit_memory=1
+# sysctl -w net.core.somaxconn=1024
+# echo never > /sys/kernel/mm/transparent_hugepage/enabled
   redis:
+    privileged: true
     image: "redis:alpine"
+    ports:
+     - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+     - redis_data:/data
 
   portainer:
     image: "portainer/portainer"
