@@ -89,7 +89,7 @@ do
 	for entry in $HOME_SRT/QUEUE/*
 	do
 		echo " read file no:$counter"
-		mv "$HOME_SRT/QUEUE/$entry" $HOME_SRT/SEND/ -f
+		mv "$entry" $HOME_SRT/SEND/ -f
 		((counter++))
 		echo " file $counter $entry push to SEND folder"
 		if [ "$counter" -eq $POOL_SRT ]; then
@@ -119,10 +119,10 @@ do
 		echo "Send file "$entry
 		result=0
 
-		echo "srt-file-transmit -v -loglevel=debug file://$HOME_SRT/SEND/$entry srt://$HOST_SRT:$PORT_SRT/"	
-		if [ -f $HOME_SRT/SEND/$entry ]
+		echo "srt-file-transmit -v -loglevel=debug file://$entry srt://$HOST_SRT:$PORT_SRT/"	
+		if [ -f $entry ]
 		then
-			srt-file-transmit -v -loglevel=debug file://$HOME_SRT/SEND/$entry srt://$HOST_SRT:$PORT_SRT/
+			srt-file-transmit -v -loglevel=debug file://$entry srt://$HOST_SRT:$PORT_SRT/
 			if [ $? -eq 0 ]
 			then
 				result=0
@@ -134,13 +134,13 @@ do
 		if [ $result -eq 0 ]
 		then
 			echo "Success"
-			mv "$HOME_SRT/SEND/$entry" $HOME_SRT/TREATED/ -f
+			mv "$entry" $HOME_SRT/TREATED/ -f
 			echo "File $entry correctly sent and put in TREATED folder"
 			rm $HOME_SRT/BATCH/* -f
 			echo "Corresponding files in BATCH folder are removed"
 		else
 			echo "XXXXX FAILED XXXXX"
-			rm "$HOME_SRT/SEND/$entry" -f
+			rm "$entry" -f
 			echo "File $entry removed"
 			mv $HOME_SRT/BATCH/* $HOME_SRT/QUEUE/ -f
 			echo "Files from BATCH requeued in QUEUE folder"

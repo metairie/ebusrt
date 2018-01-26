@@ -63,7 +63,7 @@ do
 		IFS=$(echo -en "\n\b")
 		for entry in $HOME_SRT/RECEIVE/*
 		do
-			mv "$HOME_SRT/RECEIVE/$entry" $HOME_SRT/LOT/ -f
+			mv "$entry" $HOME_SRT/LOT/ -f
 			echo " file $entry pushed from RECEIVE to LOT folder"
 			if [ ${entry: -4} == ".tar" ]; then
 				cd $HOME_SRT/LOT
