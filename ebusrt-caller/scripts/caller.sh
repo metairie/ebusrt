@@ -86,7 +86,7 @@ do
 	counter=0
 	for entry in `ls $HOME_SRT/QUEUE/`; do
 		echo " read file no:$counter"
-		mv $HOME_SRT/QUEUE/$entry $HOME_SRT/SEND/ -f
+		mv "$HOME_SRT/QUEUE/$entry" $HOME_SRT/SEND/ -f
 		((counter++))
 		echo " file $counter $entry push to SEND folder"
 		if [ "$counter" -eq $POOL_SRT ]; then
