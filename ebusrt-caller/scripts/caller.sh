@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Launch srt-file-transmit in CALLER mode"
 export LD_LIBRARY_PATH=/usr/local/lib
 
@@ -84,7 +86,7 @@ do
 	counter=0
 	for entry in `ls $HOME_SRT/QUEUE/`; do
 		echo " read file no:$counter"
-		mv '$HOME_SRT/QUEUE/$entry' $HOME_SRT/SEND/ -f
+		mv $HOME_SRT/QUEUE/$entry $HOME_SRT/SEND/ -f
 		((counter++))
 		echo " file $counter $entry push to SEND folder"
 		if [ "$counter" -eq $POOL_SRT ]; then
@@ -95,12 +97,12 @@ do
 	filetosend=$HOST_SRT-`date +%Y%m%d_%H%M%S`-$RANDOM.tar
 	echo "Package $counter files to a slighty compressed tar file: "$filetosend
 	cd $HOME_SRT/SEND/
-	tar -zcvf '$HOME_SRT/$filetosend' *
+	tar -zcvf "$HOME_SRT/$filetosend" *
 	cd $HOME_SRT
 	# move all source files in the batch into this temp folder
 	mv SEND/* BATCH/ -f
 	# tar file is pushed to SEND
-	mv '$filetosend' SEND/ -f
+	mv "$filetosend" SEND/ -f
 	echo "Archive SEND/"$filetosend" created"
 
 	# launch sending
@@ -125,13 +127,13 @@ do
 		if [ $result -eq 0 ]
 		then
 			echo "Success"
-			mv '$HOME_SRT/SEND/$entry' $HOME_SRT/TREATED/ -f
+			mv "$HOME_SRT/SEND/$entry" $HOME_SRT/TREATED/ -f
 			echo "File $entry correctly sent and put in TREATED folder"
 			rm $HOME_SRT/BATCH/* -f
 			echo "Corresponding files in BATCH folder are removed"
 		else
 			echo "XXXXX FAILED XXXXX"
-			rm '$HOME_SRT/SEND/$entry' -f
+			rm "$HOME_SRT/SEND/$entry" -f
 			echo "File $entry removed"
 			mv $HOME_SRT/BATCH/* $HOME_SRT/QUEUE/ -f
 			echo "Files from BATCH requeued in QUEUE folder"

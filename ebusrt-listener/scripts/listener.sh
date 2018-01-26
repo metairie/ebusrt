@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Launch srt-file-transmit in LISTENER mode"
 export LD_LIBRARY_PATH=/usr/local/lib
 
@@ -57,13 +59,13 @@ do
 	then
 		echo " Success "
 		for entry in `ls $HOME_SRT/RECEIVE/`; do
-			mv '$HOME_SRT/RECEIVE/$entry' $HOME_SRT/LOT/ -f
+			mv "$HOME_SRT/RECEIVE/$entry" $HOME_SRT/LOT/ -f
 			echo " file $entry pushed from RECEIVE to LOT folder"
 			if [ ${entry: -4} == ".tar" ]; then
 				cd $HOME_SRT/LOT
-				tar -zxvf '$entry'
+				tar -zxvf "$entry"
 				echo " uncompress $entry"
-				rm '$entry'
+				rm "$entry"
 				echo " remove tar file $entry"
 				cd $HOME_SRT
 			fi
