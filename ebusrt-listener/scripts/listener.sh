@@ -58,7 +58,11 @@ do
 	if [ $? -eq 0 ]
 	then
 		echo " Success "
-		for entry in `ls $HOME_SRT/RECEIVE/`; do
+		
+		SAVEIFS=$IFS
+		IFS=$(echo -en "\n\b")
+		for entry in $HOME_SRT/RECEIVE/*
+		do
 			mv "$HOME_SRT/RECEIVE/$entry" $HOME_SRT/LOT/ -f
 			echo " file $entry pushed from RECEIVE to LOT folder"
 			if [ ${entry: -4} == ".tar" ]; then
@@ -72,6 +76,7 @@ do
 			mv $HOME_SRT/LOT/* $HOME_SRT/DONE/ -f
 			echo " file(s) moved from LOT to DONE"
 		done
+		IFS=$SAVEIFS
 
 	else
 		echo "XXXXX FAILED XXXXX"

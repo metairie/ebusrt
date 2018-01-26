@@ -84,15 +84,20 @@ do
 	echo "Read pool of "$POOL_SRT" files MAX"
 	# take pool number of files max for sending
 	counter=0
-	for entry in `ls $HOME_SRT/QUEUE/`; do
+	SAVEIFS=$IFS
+	IFS=$(echo -en "\n\b")
+	for entry in $HOME_SRT/QUEUE/*
+	do
 		echo " read file no:$counter"
 		mv "$HOME_SRT/QUEUE/$entry" $HOME_SRT/SEND/ -f
 		((counter++))
 		echo " file $counter $entry push to SEND folder"
 		if [ "$counter" -eq $POOL_SRT ]; then
 			break
-		fi
+		fi	  
 	done
+	IFS=$SAVEIFS
+
 	echo
 	filetosend=$HOST_SRT-`date +%Y%m%d_%H%M%S`-$RANDOM.tar
 	echo "Package $counter files to a slighty compressed tar file: "$filetosend
@@ -106,8 +111,10 @@ do
 	echo "Archive SEND/"$filetosend" created"
 
 	# launch sending
-	for entry in `ls $HOME_SRT/SEND/`; do
-
+	SAVEIFS=$IFS
+	IFS=$(echo -en "\n\b")
+	for entry in $HOME_SRT/SEND/*
+	do
 		echo "----------------------------------------------------------------"
 		echo "Send file "$entry
 		result=0
@@ -141,8 +148,10 @@ do
 		
 		echo
 		sleep 1
-		
+
 	done
+	IFS=$SAVEIFS
+	
 
 	# loop again ?
 	echo 
