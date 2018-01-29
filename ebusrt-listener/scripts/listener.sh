@@ -67,10 +67,11 @@ do
 			echo " file $entry pushed from RECEIVE to LOT folder"
 			if [ ${entry: -4} == ".tar" ]; then
 				cd $HOME_SRT/LOT
-				tar -zxvf "$entry"
-				echo " uncompress $entry"
-				rm "$entry"
-				echo " remove tar file $entry"
+				realfilename=$(basename $entry)
+				tar -zxvf "$realfilename"
+				echo " uncompress $realfilename"
+				rm "$realfilename"
+				echo " remove tar file $realfilename"
 				cd $HOME_SRT
 			fi
 			mv $HOME_SRT/LOT/* $HOME_SRT/DONE/ -f

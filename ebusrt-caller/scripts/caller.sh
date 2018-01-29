@@ -77,6 +77,7 @@ chmod 777 $HOME_SRT/SEND -Rf
 
 cd $HOME_SRT
 loop=`ls $HOME_SRT/QUEUE | wc -l`
+waitinsec=2
 echo " Files to send in queue: "$loop
 while [ ! $loop -eq 0 ]
 do
@@ -88,7 +89,6 @@ do
 	IFS=$(echo -en "\n\b")
 	for entry in $HOME_SRT/QUEUE/*
 	do
-		echo " read file no:$counter"
 		mv "$entry" $HOME_SRT/SEND/ -f
 		((counter++))
 		echo " file $counter $entry push to SEND folder"
@@ -147,7 +147,7 @@ do
 		fi
 		
 		echo
-		sleep 1
+		sleep $waitinsec
 
 	done
 	IFS=$SAVEIFS
@@ -156,6 +156,8 @@ do
 	# loop again ?
 	echo 
 	loop=`ls $HOME_SRT/QUEUE | wc -l`
-	echo " Files resting in queue: "$loop
-
+	echo " Number of files resting in queue: "$loop
+	echo " wait ..."
+	sleep $waitinsec
+	
 done
