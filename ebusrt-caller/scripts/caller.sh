@@ -77,8 +77,8 @@ chmod 777 $HOME_SRT/SEND -Rf
 
 waitfileinsec=10
 
-do
 while :
+do
 	cd $HOME_SRT
 	loop=`ls $HOME_SRT/QUEUE | wc -l`
 	waitinsec=2
