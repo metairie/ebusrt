@@ -75,89 +75,96 @@ chmod 777 $HOME_SRT/BATCH -Rf
 chmod 777 $HOME_SRT/TREATED -Rf
 chmod 777 $HOME_SRT/SEND -Rf
 
-cd $HOME_SRT
-loop=`ls $HOME_SRT/QUEUE | wc -l`
-waitinsec=2
-echo " Files to send in queue: "$loop
-while [ ! $loop -eq 0 ]
+waitfileinsec=10
+
 do
-	echo
-	echo "Read pool of "$POOL_SRT" files MAX"
-	# take pool number of files max for sending
-	counter=0
-	SAVEIFS=$IFS
-	IFS=$(echo -en "\n\b")
-	for entry in $HOME_SRT/QUEUE/*
-	do
-		mv "$entry" $HOME_SRT/SEND/ -f
-		((counter++))
-		echo " file $counter $entry push to SEND folder"
-		if [ "$counter" -eq $POOL_SRT ]; then
-			break
-		fi	  
-	done
-	IFS=$SAVEIFS
-
-	echo
-	filetosend=$HOST_SRT-`date +%Y%m%d_%H%M%S`-$RANDOM.tar
-	echo "Package $counter files to a slighty compressed tar file: "$filetosend
-	cd $HOME_SRT/SEND/
-	tar -zcvf "$HOME_SRT/$filetosend" *
+while :
 	cd $HOME_SRT
-	# move all source files in the batch into this temp folder
-	mv SEND/* BATCH/ -f
-	# tar file is pushed to SEND
-	mv "$filetosend" SEND/ -f
-	echo "Archive SEND/"$filetosend" created"
-
-	# launch sending
-	SAVEIFS=$IFS
-	IFS=$(echo -en "\n\b")
-	for entry in $HOME_SRT/SEND/*
-	do
-		echo "----------------------------------------------------------------"
-		echo "Send file "$entry
-		result=0
-
-		echo "srt-file-transmit -v -loglevel=debug file://$entry srt://$HOST_SRT:$PORT_SRT/"	
-		if [ -f $entry ]
-		then
-			srt-file-transmit -v -loglevel=debug file://$entry srt://$HOST_SRT:$PORT_SRT/
-			if [ $? -eq 0 ]
-			then
-				result=0
-			else
-				result=1
-			fi
-		fi
-		
-		if [ $result -eq 0 ]
-		then
-			echo "Success"
-			mv "$entry" $HOME_SRT/TREATED/ -f
-			echo "File $entry correctly sent and put in TREATED folder"
-			rm $HOME_SRT/BATCH/* -f
-			echo "Corresponding files in BATCH folder are removed"
-		else
-			echo "XXXXX FAILED XXXXX"
-			rm "$entry" -f
-			echo "File $entry removed"
-			mv $HOME_SRT/BATCH/* $HOME_SRT/QUEUE/ -f
-			echo "Files from BATCH requeued in QUEUE folder"
-		fi
-		
-		echo
-		sleep $waitinsec
-
-	done
-	IFS=$SAVEIFS
-	
-
-	# loop again ?
-	echo 
 	loop=`ls $HOME_SRT/QUEUE | wc -l`
-	echo " Number of files resting in queue: "$loop
-	echo " wait ..."
-	sleep $waitinsec
+	waitinsec=2
+	echo " Files to send in queue: "$loop
+	while [ ! $loop -eq 0 ]
+	do
+		echo
+		echo "Read pool of "$POOL_SRT" files MAX"
+		# take pool number of files max for sending
+		counter=0
+		SAVEIFS=$IFS
+		IFS=$(echo -en "\n\b")
+		for entry in $HOME_SRT/QUEUE/*
+		do
+			mv "$entry" $HOME_SRT/SEND/ -f
+			((counter++))
+			echo " file $counter $entry push to SEND folder"
+			if [ "$counter" -eq $POOL_SRT ]; then
+				break
+			fi	  
+		done
+		IFS=$SAVEIFS
+
+		echo
+		filetosend=$HOST_SRT-`date +%Y%m%d_%H%M%S`-$RANDOM.tar
+		echo "Package $counter files to a slighty compressed tar file: "$filetosend
+		cd $HOME_SRT/SEND/
+		tar -zcvf "$HOME_SRT/$filetosend" *
+		cd $HOME_SRT
+		# move all source files in the batch into this temp folder
+		mv SEND/* BATCH/ -f
+		# tar file is pushed to SEND
+		mv "$filetosend" SEND/ -f
+		echo "Archive SEND/"$filetosend" created"
+
+		# launch sending
+		SAVEIFS=$IFS
+		IFS=$(echo -en "\n\b")
+		for entry in $HOME_SRT/SEND/*
+		do
+			echo "----------------------------------------------------------------"
+			echo "Send file "$entry
+			result=0
+
+			echo "srt-file-transmit -v -loglevel=debug file://$entry srt://$HOST_SRT:$PORT_SRT/"	
+			if [ -f $entry ]
+			then
+				srt-file-transmit -v -loglevel=debug file://$entry srt://$HOST_SRT:$PORT_SRT/
+				if [ $? -eq 0 ]
+				then
+					result=0
+				else
+					result=1
+				fi
+			fi
+			
+			if [ $result -eq 0 ]
+			then
+				echo "Success"
+				mv "$entry" $HOME_SRT/TREATED/ -f
+				echo "File $entry correctly sent and put in TREATED folder"
+				rm $HOME_SRT/BATCH/* -f
+				echo "Corresponding files in BATCH folder are removed"
+			else
+				echo "XXXXX FAILED XXXXX"
+				rm "$entry" -f
+				echo "File $entry removed"
+				mv $HOME_SRT/BATCH/* $HOME_SRT/QUEUE/ -f
+				echo "Files from BATCH requeued in QUEUE folder"
+			fi
+			
+			echo
+			sleep $waitinsec
+
+		done
+		IFS=$SAVEIFS
+		
+
+		# loop again ?
+		echo 
+		loop=`ls $HOME_SRT/QUEUE | wc -l`
+		echo " Number of files resting in queue: "$loop
+		echo " wait ..."
+		sleep $waitinsec
+		
+	done
 	
+	sleep $waitfileinsec
 done
