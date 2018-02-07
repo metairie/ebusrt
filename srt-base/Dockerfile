@@ -6,7 +6,7 @@ RUN mkdir /opt
 WORKDIR /opt
 
 RUN apk update
-RUN apk add tcl pkgconfig openssl-dev cmake gcc g++ make automake git bash
+RUN apk add tcl pkgconfig openssl-dev cmake gcc g++ make automake git bash ncftp
 RUN git clone -b dev  https://github.com/Haivision/srt.git && \
  cd srt && ./configure && make && make install
 

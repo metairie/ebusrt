@@ -15,6 +15,7 @@ do
 done
 
 # json
+# FIXME
 if [ -f /tmp/srt.json ]; then
 	config="/tmp/srt.json"
 	HOME_SRT=$(jq '. |  .HOME_SRT' $config | tr -d '"')
