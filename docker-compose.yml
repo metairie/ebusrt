@@ -18,16 +18,17 @@ services:
      - "8080:8080/udp"
     volumes:
      - /tmp:/tmp
+     - /tmp/ipop.json:/tmp/ipop.json
      - ebusrt_data:/data
 
-  pure-ftpd:
-    image: "stilliard/pure-ftpd:hardened"
-    container_name: ftpd_server
-    ports:
-     - "21:21"
-     - "30000-30009:30000-30009"
-    environment:
-     - "PUBLICHOST=localhost"
+#  pure-ftpd:
+#    image: "stilliard/pure-ftpd:hardened"
+#    container_name: ftpd_server
+#    ports:
+#     - "21:21"
+#     - "30000-30009:30000-30009"
+#    environment:
+#     - "PUBLICHOST=localhost"
 
 # FIX WARNING to be run on HOST
 # sysctl vm.overcommit_memory=1
