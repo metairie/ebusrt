@@ -1,10 +1,11 @@
 # Delete all containers
-docker rm $(docker ps -a -q)
-
 # Delete all images
+docker rm $(docker ps -a -q)
 docker rmi $(docker images -q)
 
 # Execute a sh in an already running container
 docker ps 
 docker exec -it <NAME> | <CONTAINER_ID> /bin/sh
 
+# push to repo
+docker push ebuit/fds

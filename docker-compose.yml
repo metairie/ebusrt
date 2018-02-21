@@ -12,6 +12,11 @@ services:
 #     - /tmp:/tmp
 #     - ebusrt_data:/data
 
+  fds:
+    image: "ebuit:fds"
+    volumes:
+     - /tmp:/tmp
+
   ebusrt-listener:
     build: ebusrt-listener
     ports:
