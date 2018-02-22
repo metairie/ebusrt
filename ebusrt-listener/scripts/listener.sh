@@ -79,24 +79,13 @@ do
 		do
 			mv "$entry" $HOME_SRT/LOT/ -f
 			echo " file $entry pushed from RECEIVE to LOT folder"
-			if [ ${entry: -4} == ".tar" ]; then
-				cd $HOME_SRT/LOT
-				realfilename=$(basename $entry)
-				tar -zxvf "$realfilename"
-				echo " uncompress $realfilename"
-				rm "$realfilename"
-				echo " remove tar file $realfilename"
-				cd $HOME_SRT
-			fi
-						# FIXME
 			ncftpput -u bkp -p bkp $IPOP_SRT / $HOME_SRT/LOT/*
 			mv $HOME_SRT/LOT/* $HOME_SRT/DONE/ -f
 			echo " file(s) moved from LOT to DONE"
-			
 		done
 		IFS=$SAVEIFS
 
 	else
-		echo "XXXXX FAILED XXXXX"
+		echo "XXXXX RECEIVED FILE FAILED XXXXX"
 	fi
 done

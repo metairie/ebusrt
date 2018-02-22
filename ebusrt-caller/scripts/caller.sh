@@ -37,9 +37,11 @@ then
 	PORT_SRT=8080
 fi
 
-POOL_SRT=10
+# time before each file sending
+waitfileinsec=5
+# time before 
+waitinsec=1
 echo " Variables used for SRT"
-echo "POOL_SRT: "$POOL_SRT
 echo "HOME_SRT: "$HOME_SRT
 echo "HOST_SRT targeted: "$HOST_SRT
 echo "PORT_SRT: "$PORT_SRT
@@ -51,12 +53,6 @@ if [ ! -d "$HOME_SRT/QUEUE" ]; then
   mkdir $HOME_SRT/QUEUE
 else
   echo "  $HOME_SRT/QUEUE exists yet"
-fi
-if [ ! -d "$HOME_SRT/BATCH" ]; then
-  echo "  create $HOME_SRT/BATCH"
-  mkdir $HOME_SRT/BATCH
-else
-  echo "  $HOME_SRT/BATCH exists yet"
 fi
 if [ ! -d "$HOME_SRT/TREATED" ]; then
   echo "  create $HOME_SRT/TREATED"
@@ -72,17 +68,13 @@ else
 fi
 
 chmod 777 $HOME_SRT/QUEUE -Rf
-chmod 777 $HOME_SRT/BATCH -Rf
 chmod 777 $HOME_SRT/TREATED -Rf
 chmod 777 $HOME_SRT/SEND -Rf
-
-waitfileinsec=10
 
 while :
 do
 	cd $HOME_SRT
 	loop=`ls $HOME_SRT/QUEUE | wc -l`
-	waitinsec=2
 	echo " Files to send in queue: "$loop
 	while [ ! $loop -eq 0 ]
 	do
@@ -102,18 +94,6 @@ do
 			fi	  
 		done
 		IFS=$SAVEIFS
-
-		echo
-		filetosend=$HOST_SRT-`date +%Y%m%d_%H%M%S`-$RANDOM.tar
-		echo "Package $counter files to a slighty compressed tar file: "$filetosend
-		cd $HOME_SRT/SEND/
-		tar -zcvf "$HOME_SRT/$filetosend" *
-		cd $HOME_SRT
-		# move all source files in the batch into this temp folder
-		mv SEND/* BATCH/ -f
-		# tar file is pushed to SEND
-		mv "$filetosend" SEND/ -f
-		echo "Archive SEND/"$filetosend" created"
 
 		# launch sending
 		SAVEIFS=$IFS
@@ -141,14 +121,9 @@ do
 				echo "Success"
 				mv "$entry" $HOME_SRT/TREATED/ -f
 				echo "File $entry correctly sent and put in TREATED folder"
-				rm $HOME_SRT/BATCH/* -f
-				echo "Corresponding files in BATCH folder are removed"
 			else
-				echo "XXXXX FAILED XXXXX"
+				echo "XXXXX SEND FILE FAILED XXXXX"
 				rm "$entry" -f
-				echo "File $entry removed"
-				mv $HOME_SRT/BATCH/* $HOME_SRT/QUEUE/ -f
-				echo "Files from BATCH requeued in QUEUE folder"
 			fi
 			
 			echo
@@ -156,7 +131,6 @@ do
 
 		done
 		IFS=$SAVEIFS
-		
 
 		# loop again ?
 		echo 

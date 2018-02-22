@@ -1,5 +1,5 @@
 {
 	"HOME_SRT": "/tmp",
-	"HOST_SRT": "10.69.221.238",
+	"HOST_SRT": "srt_listener_dns",
 	"PORT_SRT": "8080"
 }
