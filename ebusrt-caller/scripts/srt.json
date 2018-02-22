@@ -1,4 +1,6 @@
 {
+	"waitfileinsec": 10,
+	"waitinsec": 2,
 	"HOME_SRT": "/tmp",
 	"HOST_SRT": "srt_listener_dns",
 	"PORT_SRT": "8080"

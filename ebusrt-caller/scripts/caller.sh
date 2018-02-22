@@ -18,12 +18,22 @@ done
 # FIXME
 if [ -f /tmp/srt.json ]; then
 	config="/tmp/srt.json"
+	waitfileinsec=$(jq '. |  .waitfileinsec' $config | tr -d '"')
+	waitinsec=$(jq '. |  .waitinsec' $config | tr -d '"')
 	HOME_SRT=$(jq '. |  .HOME_SRT' $config | tr -d '"')
 	HOST_SRT=$(jq '. |  .HOST_SRT' $config | tr -d '"')
 	PORT_SRT=$(jq '. |  .PORT_SRT' $config | tr -d '"')
 fi
 
 # default
+if [[ -z $waitfileinsec ]] 
+then
+	waitfileinsec=10
+fi
+if [[ -z $waitinsec ]] 
+then
+	waitinsec=10
+fi
 if [[ -z $HOME_SRT ]] 
 then
 	HOME_SRT=/tmp
@@ -37,11 +47,9 @@ then
 	PORT_SRT=8080
 fi
 
-# time before each file sending
-waitfileinsec=5
-# time before 
-waitinsec=1
 echo " Variables used for SRT"
+echo "waitfileinsec: "$waitfileinsec
+echo "waitinsec: "$waitinsec
 echo "HOME_SRT: "$HOME_SRT
 echo "HOST_SRT targeted: "$HOST_SRT
 echo "PORT_SRT: "$PORT_SRT
