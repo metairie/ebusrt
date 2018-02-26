@@ -30,7 +30,7 @@ fi
 # default
 if [[ -z $waitfileinsec ]] 
 then
-	waitfileinsec=10
+	waitfileinsec=5
 fi
 if [[ -z $waitinsec ]] 
 then
@@ -54,6 +54,12 @@ then
 fi
 
 echo " ::::::: Variables used for SRT ::::::: "
+if [ "$waitfileinsec" -lt 5 ]; then
+	waitfileinsec=5
+fi
+if [ "$waitinsec" -lt 1 ]; then
+	waitinsec=1
+fi
 echo "waitfileinsec: "$waitfileinsec
 echo "waitinsec: "$waitinsec
 echo "HOME_SRT: "$HOME_SRT
