@@ -79,8 +79,8 @@ do
 		do
 			mv "$entry" $HOME_SRT/LOT/ -f
 			echo " file $entry pushed from RECEIVE to LOT folder"
-			ncftpput -u bkp -p bkp $IPOP_SRT / $HOME_SRT/LOT/$entry
-			mv $HOME_SRT/LOT/$entry $HOME_SRT/DONE/ -f
+			ncftpput -u bkp -p bkp $IPOP_SRT / "$HOME_SRT/LOT/$entry"
+			mv "$HOME_SRT/LOT/$entry" $HOME_SRT/DONE/ -f
 			echo " file $entry moved from LOT to DONE folder"
 		done
 		IFS=$SAVEIFS
