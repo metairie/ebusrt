@@ -68,6 +68,12 @@ if [ ! -d "$HOME_SRT/TREATED" ]; then
 else
   echo "  $HOME_SRT/TREATED exists yet"
 fi
+if [ ! -d "$HOME_SRT/FAILED" ]; then
+  echo "  create $HOME_SRT/FAILED"
+  mkdir $HOME_SRT/FAILED
+else
+  echo "  $HOME_SRT/FAILED exists yet"
+fi
 if [ ! -d "$HOME_SRT/SEND" ]; then
   echo "  create $HOME_SRT/SEND"
   mkdir $HOME_SRT/SEND
@@ -77,6 +83,7 @@ fi
 
 chmod 777 $HOME_SRT/QUEUE -Rf
 chmod 777 $HOME_SRT/TREATED -Rf
+chmod 777 $HOME_SRT/FAILED -Rf
 chmod 777 $HOME_SRT/SEND -Rf
 
 while :
@@ -131,7 +138,8 @@ do
 				echo "File $entry correctly sent and put in TREATED folder"
 			else
 				echo "XXXXX SEND FILE FAILED XXXXX"
-				rm "$entry" -f
+				mv "$entry" $HOME_SRT/FAILED/ -f
+				echo "File $entry moved to FAILED folder"
 			fi
 			
 			echo
