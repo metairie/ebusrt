@@ -34,7 +34,7 @@ then
 fi
 if [[ -z $waitinsec ]] 
 then
-	waitinsec=10
+	waitinsec=1
 fi
 if [[ -z $HOME_SRT ]] 
 then
@@ -157,5 +157,5 @@ do
 		
 	done
 	
-	#sleep $waitfileinsec
+	sleep $waitfileinsec
 done
