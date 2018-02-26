@@ -4,13 +4,14 @@ echo "Launch srt-file-transmit in CALLER mode"
 export LD_LIBRARY_PATH=/usr/local/lib
 
 # args
-while getopts h:t:p: option
+while getopts h:t:s:p: option
 do
  case "${option}"
  in
  h) HOME_SRT=${OPTARG};;
  t) HOST_SRT=${OPTARG};;
- p) PORT_SRT=$OPTARG;;
+ s) PORT_SRT=${OPTARG};;
+ p) POOL_SRT=$OPTARG;;
  esac
 done
 
@@ -23,6 +24,7 @@ if [ -f /tmp/srt.json ]; then
 	HOME_SRT=$(jq '. |  .HOME_SRT' $config | tr -d '"')
 	HOST_SRT=$(jq '. |  .HOST_SRT' $config | tr -d '"')
 	PORT_SRT=$(jq '. |  .PORT_SRT' $config | tr -d '"')
+	POOL_SRT=$(jq '. |  .POOL_SRT' $config | tr -d '"')
 fi
 
 # default
@@ -46,13 +48,18 @@ if [[ -z $PORT_SRT ]]
 then
 	PORT_SRT=8080
 fi
+if [[ -z $POOL_SRT ]] 
+then
+	POOL_SRT=1
+fi
 
-echo " Variables used for SRT"
+echo " ::::::: Variables used for SRT ::::::: "
 echo "waitfileinsec: "$waitfileinsec
 echo "waitinsec: "$waitinsec
 echo "HOME_SRT: "$HOME_SRT
 echo "HOST_SRT targeted: "$HOST_SRT
 echo "PORT_SRT: "$PORT_SRT
+echo "POOL_SRT: "$POOL_SRT
 
 echo " - Verifying/Creating folders" 
 cd $HOME_SRT
