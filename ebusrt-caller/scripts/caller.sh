@@ -145,12 +145,12 @@ do
 				echo "File $entry correctly sent and put in TREATED folder"
 			else
 				echo "XXXXX SEND FILE FAILED XXXXX"
-				mv "$entry" $HOME_SRT/FAILED/ -f
-				echo "File $entry moved to FAILED folder"
+				mv "$entry" $HOME_SRT/QUEUE/ -f
+				echo "File $entry moved to QUEUE folder"
 			fi
 			
 			echo
-			sleep $waitinsec
+			#sleep $waitinsec
 
 		done
 		IFS=$SAVEIFS
@@ -160,9 +160,9 @@ do
 		loop=`ls $HOME_SRT/QUEUE | wc -l`
 		echo " Number of files resting in queue: "$loop
 		echo " wait ..."
-		sleep $waitinsec
+		#sleep $waitinsec
 		
 	done
 	
-	sleep $waitfileinsec
+	#sleep $waitfileinsec
 done
