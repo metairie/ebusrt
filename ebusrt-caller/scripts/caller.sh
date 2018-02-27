@@ -128,7 +128,7 @@ do
 			echo "srt-file-transmit -v -loglevel=debug file://$entry srt://$HOST_SRT:$PORT_SRT/"	
 			if [ -f $entry ]
 			then
-				srt-file-transmit -v -loglevel=debug file://$entry srt://$HOST_SRT:$PORT_SRT/
+				srt-file-transmit file://$entry srt://$HOST_SRT:$PORT_SRT/
 				if [ $? -eq 0 ]
 				then
 					result=0

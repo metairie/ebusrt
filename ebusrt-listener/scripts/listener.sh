@@ -68,7 +68,7 @@ do
 	echo "----------------------------------------------------------------"
 	echo " - Start: srt-file-transmit -v -loglevel=debug srt://:$PORT_SRT/ file://$HOME_SRT/RECEIVE"
 	echo "   waiting file ... "
-	srt-file-transmit -v -loglevel=debug srt://:$PORT_SRT/ file://$HOME_SRT/RECEIVE
+	srt-file-transmit srt://:$PORT_SRT/ file://$HOME_SRT/RECEIVE
 	if [ $? -eq 0 ]
 	then
 		echo " Success "
