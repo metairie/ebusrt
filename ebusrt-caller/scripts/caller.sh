@@ -20,7 +20,6 @@ done
 if [ -f /tmp/srt.json ]; then
 	config="/tmp/srt.json"
 	waitfileinsec=$(jq '. |  .waitfileinsec' $config | tr -d '"')
-	waitinsec=$(jq '. |  .waitinsec' $config | tr -d '"')
 	HOME_SRT=$(jq '. |  .HOME_SRT' $config | tr -d '"')
 	HOST_SRT=$(jq '. |  .HOST_SRT' $config | tr -d '"')
 	PORT_SRT=$(jq '. |  .PORT_SRT' $config | tr -d '"')
@@ -31,10 +30,6 @@ fi
 if [[ -z $waitfileinsec ]] 
 then
 	waitfileinsec=5
-fi
-if [[ -z $waitinsec ]] 
-then
-	waitinsec=1
 fi
 if [[ -z $HOME_SRT ]] 
 then
@@ -57,11 +52,7 @@ echo " ::::::: Variables used for SRT ::::::: "
 if [ "$waitfileinsec" -lt 5 ]; then
 	waitfileinsec=5
 fi
-if [ "$waitinsec" -lt 1 ]; then
-	waitinsec=1
-fi
 echo "waitfileinsec: "$waitfileinsec
-echo "waitinsec: "$waitinsec
 echo "HOME_SRT: "$HOME_SRT
 echo "HOST_SRT targeted: "$HOST_SRT
 echo "PORT_SRT: "$PORT_SRT
@@ -156,9 +147,6 @@ do
 				mv "$entry" $HOME_SRT/QUEUE/ -f
 				echo "File $entry moved to QUEUE folder"
 			fi
-			
-			echo
-			#sleep $waitinsec
 
 		done
 		IFS=$SAVEIFS
@@ -167,9 +155,7 @@ do
 		echo 
 		loop=`ls $HOME_SRT/QUEUE | wc -l`
 		echo " Number of files resting in queue: "$loop
-		echo " wait ..."
-		#sleep $waitinsec
-		
+
 	done
 	
 	sleep $waitfileinsec
