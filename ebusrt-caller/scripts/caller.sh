@@ -125,25 +125,34 @@ do
 			echo "Send file "$entry
 			result=0
 
-			echo "srt-file-transmit -v -loglevel=debug file://$entry srt://$HOST_SRT:$PORT_SRT/"	
+			# ADD this for verbose and debug 
+			# -v -loglevel=debug
+			echo "srt-file-transmit file://$entry srt://$HOST_SRT:$PORT_SRT/"
+
 			if [ -f $entry ]
 			then
-				srt-file-transmit file://$entry srt://$HOST_SRT:$PORT_SRT/
-				if [ $? -eq 0 ]
+				echo "$c"
+				ret=0
+				command=$(srt-file-transmit file://$entry srt://$HOST_SRT:$PORT_SRT/)
+				ret=$?
+				error=$(echo "$command" | grep -i 'error' | wc -l)
+				if [ $error -gt 0 ] || [ $r -gt 0 ]
 				then
 					result=0
 				else
 					result=1
 				fi
 			fi
-			
+
 			if [ $result -eq 0 ]
 			then
 				echo "Success"
 				mv "$entry" $HOME_SRT/TREATED/ -f
 				echo "File $entry correctly sent and put in TREATED folder"
 			else
+				echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 				echo "XXXXX SEND FILE FAILED XXXXX"
+				echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 				mv "$entry" $HOME_SRT/QUEUE/ -f
 				echo "File $entry moved to QUEUE folder"
 			fi
