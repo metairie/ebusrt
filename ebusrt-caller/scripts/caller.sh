@@ -20,6 +20,7 @@ done
 if [ -f /tmp/srt.json ]; then
 	config="/tmp/srt.json"
 	waitfileinsec=$(jq '. |  .waitfileinsec' $config | tr -d '"')
+	waitsrtinsec=$(jq '. |  .waitsrtinsec' $config | tr -d '"')
 	HOME_SRT=$(jq '. |  .HOME_SRT' $config | tr -d '"')
 	HOST_SRT=$(jq '. |  .HOST_SRT' $config | tr -d '"')
 	PORT_SRT=$(jq '. |  .PORT_SRT' $config | tr -d '"')
@@ -48,11 +49,19 @@ then
 	POOL_SRT=1
 fi
 
+echo "----------------------------------------------------------------"
 echo " ::::::: Variables used for SRT ::::::: "
+echo "----------------------------------------------------------------"
+
 if [ "$waitfileinsec" -lt 5 ]; then
 	waitfileinsec=5
 fi
+if [ "$waitsrtsec" -lt 2 ]; then
+	waitsrtsec=2
+fi
+
 echo "waitfileinsec: "$waitfileinsec
+echo "waitsrtinsec: "$waitsrtinsec
 echo "HOME_SRT: "$HOME_SRT
 echo "HOST_SRT targeted: "$HOST_SRT
 echo "PORT_SRT: "$PORT_SRT
@@ -91,7 +100,7 @@ do
 	while [ ! $loop -eq 0 ]
 	do
 		echo "----------------------------------------------------------------"
-		echo " Files to send in queue: $loop   ----------------------"
+		echo " Files to send in queue: $loop"
 		echo "----------------------------------------------------------------"
 		echo
 		echo "Read pool of "$POOL_SRT" files MAX"
@@ -153,7 +162,8 @@ do
 
 		done
 		IFS=$SAVEIFS
-
+		sleep $waitsrtinsec
+		
 		# loop again ?
 		echo 
 		loop=`ls $HOME_SRT/QUEUE | wc -l`
