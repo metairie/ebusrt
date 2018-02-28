@@ -100,7 +100,7 @@ do
 	while [ ! $loop -eq 0 ]
 	do
 		echo "----------------------------------------------------------------"
-		echo " Files to send in queue: $loop"
+		echo " Files in queue: $loop"
 		echo "----------------------------------------------------------------"
 		echo
 		echo "Read pool of "$POOL_SRT" files MAX"
