@@ -87,9 +87,12 @@ while :
 do
 	cd $HOME_SRT
 	loop=`ls $HOME_SRT/QUEUE | wc -l`
-	echo " Files to send in queue: "$loop
+	echo "Read files in QUEUE ... "
 	while [ ! $loop -eq 0 ]
 	do
+		echo "----------------------------------------------------------------"
+		echo " Files to send in queue: $loop   ----------------------"
+		echo "----------------------------------------------------------------"
 		echo
 		echo "Read pool of "$POOL_SRT" files MAX"
 		# take pool number of files max for sending
@@ -112,7 +115,6 @@ do
 		IFS=$(echo -en "\n\b")
 		for entry in $HOME_SRT/SEND/*
 		do
-			echo "----------------------------------------------------------------"
 			echo "Send file "$entry
 			result=0
 
@@ -124,14 +126,15 @@ do
 			then
 				echo "$c"
 				ret=0
-				command=$(srt-file-transmit file://$entry srt://$HOST_SRT:$PORT_SRT/)
+				command=$(srt-file-transmit -v "file://$entry" srt://$HOST_SRT:$PORT_SRT/)
 				ret=$?
 				error=$(echo "$command" | grep -i 'error' | wc -l)
-				if [ $error -gt 0 ] || [ $r -gt 0 ]
+				if [ $error -gt 0 ] || [ $ret -gt 0 ]
 				then
-					result=0
-				else
 					result=1
+					echo "$command"
+				else
+					result=0
 				fi
 			fi
 
@@ -154,7 +157,6 @@ do
 		# loop again ?
 		echo 
 		loop=`ls $HOME_SRT/QUEUE | wc -l`
-		echo " Number of files resting in queue: "$loop
 
 	done
 	
