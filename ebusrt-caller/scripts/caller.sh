@@ -103,16 +103,17 @@ do
 		echo " Files in queue: $loop"
 		echo "----------------------------------------------------------------"
 		echo
-		echo "Read pool of "$POOL_SRT" files MAX"
+
 		# take pool number of files max for sending
 		counter=0
 		SAVEIFS=$IFS
 		IFS=$(echo -en "\n\b")
 		for entry in $HOME_SRT/QUEUE/*
 		do
+			echo " read file "$entry
 			mv "$entry" $HOME_SRT/SEND/ -f
 			((counter++))
-			echo " file $counter $entry push to SEND folder"
+			echo " file $entry push to SEND folder"
 			if [ "$counter" -eq $POOL_SRT ]; then
 				break
 			fi	  
@@ -127,9 +128,8 @@ do
 			echo "Send file "$entry
 			result=0
 
-			# ADD this for verbose and debug 
-			# -v -loglevel=debug
-			echo "srt-file-transmit file://$entry srt://$HOST_SRT:$PORT_SRT/"
+			# ADD this for debug -loglevel=debug
+			echo "srt-file-transmit -v file://$entry srt://$HOST_SRT:$PORT_SRT/"
 
 			if [ -f $entry ]
 			then
